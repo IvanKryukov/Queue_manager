@@ -6,11 +6,11 @@
 
 typedef struct
 {
-	uint32_t * base;
-	uint32_t head;
-	uint32_t tail;
-	uint32_t size;
-	uint32_t max_size;
+	size_t * base;
+	size_t * head;
+	size_t * tail;
+	size_t	 size;
+	size_t	 max_size;
 } t_queue;
 
 typedef enum
@@ -28,11 +28,11 @@ void print_queue_info( const t_queue * q);
 void print_queue_items__all( const t_queue * q);
 void print_queue_items__chosen( const t_queue * q);
 
-e_qres		qinit(	t_queue * q, const uint32_t * p_base, const int32_t length_in_items);
+e_qres		qinit(	t_queue * q, const size_t * p_base, const size_t length_in_items);
 bool		qempty(	const t_queue * q);
-uint32_t	qsize(	t_queue * q);
+size_t		qsize(	t_queue * q);
 uint32_t 	qpop(	t_queue * q);
 e_qres		qpush(	t_queue * q, const uint32_t val);
-e_qres		qmerge( t_queue * qres, const t_queue * q1, const t_queue * q2, const uint32_t * p_base, const int32_t length_in_items);
+e_qres		qmerge( t_queue * qres, t_queue * q1, t_queue * q2, const size_t * p_base, const size_t length_in_items);
 
 #endif
