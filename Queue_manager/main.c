@@ -39,18 +39,24 @@ static void print_qret( const e_qres ret)
 		printf("unknown\n");
 }
 
-int main( int argc, char * argv)
+int main( int argc, char ** argv)
 {
 	printf(" *** Queue manager ***\n");
+
+	int j;
+	for (j = 0; j < argc - 1; j++)
+	{
+		printf("%02d - %s\n", j, *++argv);
+	}
 
 	t_queue qu[3];
 	uint8_t qu_count = 0;
 	uint32_t i = 1;
 
 	/*
-	 * Check if the file with the queues exits
-	 * + :	read the info about each queue
-	 * - :	create the file and mark up the file space
+	 *	Check if the file with the queues exits
+	 *	+ :	read the info about each queue
+	 *	- :	create the file and mark up the file space
 	 */
 	FILE * quf;
 	errno_t quf_res = fopen_s( &quf, "./queues.bin", "r");
@@ -64,9 +70,7 @@ int main( int argc, char * argv)
 	else
 		quf_res = freopen_s( &quf, "./queues.bin", "w+b", quf);
 	
-
-
-	char board_char_0 = getchar();
+	char board_char_0 = argv[0][0]; // getchar();
 
 
 	if ('1' == board_char_0)

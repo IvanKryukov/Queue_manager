@@ -3,6 +3,7 @@
 #include "queue_manager.h"
 
 #define TRACE_PTRS
+#define PRINT_REAL_MAP
 
 void print_queue_info( const t_queue * q)
 {
@@ -28,20 +29,57 @@ void print_queue_info( const t_queue * q)
 		  );
 }
 
-void print_queue_items__all( const t_queue * q)
+void print_queue_items__all(const t_queue* q)
 {
 	printf(" - queue data - \n");
-	uint32_t i;
 
-	for (i = 0; i < q->max_size; i++)
-		printf("%02zu ", q->base[i]);
+	size_t* ptr = q->head;
+
+#if !(defined PRINT_REAL_MAP)
+	size_t i;
+
+	for (i = 0; i < q->size; i++)
+	{
+		printf("%02zu ", *ptr);
+
+		if (ptr >= q->base + (q->max_size - 1))
+			(ptr = q->base);
+		else
+			ptr++;
+	}
+#else
+	for (ptr = q->base; ptr < q->base + (q->max_size - 1); ptr++)
+		printf("%02zu ", *ptr);
+#endif
 
 	printf("\n");
 }
 
-void print_queue_items__chosen( const t_queue * q)
+void print_queue_items__chosen(const t_queue* q, const uint32_t bit_one_number)
 {
+	size_t* ptr = q->base;
 
+#if !(defined PRINT_REAL_MAP)
+	size_t i;
+
+	for (i = 0; i < q->size; i++)
+	{
+		if ((*ptr & (size_t)bit_one_number) != 0)
+			printf("%02zu ", *ptr);
+
+		if (ptr >= q->base + (q->max_size - 1))
+			(ptr = q->base);
+		else
+			ptr++;
+	}
+#else
+	for (ptr = q->base; ptr < q->base + (q->max_size - 1); ptr++)
+		if ((*ptr & (size_t)bit_one_number) != 0)
+			printf("%02zu ", *ptr);
+		else
+			printf("%02zu ", 0);
+
+#endif
 }
 
 e_qres qinit( t_queue * q, const size_t * p_base, const size_t length_in_items)

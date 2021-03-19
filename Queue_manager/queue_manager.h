@@ -26,7 +26,7 @@ typedef enum
 
 void print_queue_info( const t_queue * q);
 void print_queue_items__all( const t_queue * q);
-void print_queue_items__chosen( const t_queue * q);
+void print_queue_items__chosen( const t_queue * q, const uint32_t bit_one_number);
 
 e_qres		qinit(	t_queue * q, const size_t * p_base, const size_t length_in_items);
 bool		qempty(	const t_queue * q);
