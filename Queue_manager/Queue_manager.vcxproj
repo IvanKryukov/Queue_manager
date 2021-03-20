@@ -24,6 +24,7 @@
     <ProjectGuid>{fad19d7e-c410-428d-ad4b-abc747a9990d}</ProjectGuid>
     <RootNamespace>Queuemanager</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>qman</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

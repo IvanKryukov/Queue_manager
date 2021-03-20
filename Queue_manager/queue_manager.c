@@ -3,7 +3,7 @@
 #include "queue_manager.h"
 
 #define TRACE_PTRS
-#define PRINT_REAL_MAP
+//#define PRINT_REAL_MAP
 
 void print_queue_info( const t_queue * q)
 {
