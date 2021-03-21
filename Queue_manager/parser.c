@@ -60,15 +60,14 @@ size_t set_queue_to_file( t_queue q, FILE * f)
 	uint32_t ch = CHECK_WVAL;
 	size_t res = fwrite((const void *)(&ch), sizeof(uint32_t), 1, f);	
 
-	uint32_t data_to_write[5] = { 0, 0, 0, 0 ,0 };
-	data_to_write[1] = (uint32_t)(q.head - q.base);
-	data_to_write[2] = (uint32_t)(q.tail - q.base);
-	data_to_write[3] = (uint32_t)(q.size);
-	data_to_write[4] = (uint32_t)(q.max_size);
+	uint32_t data_to_write[3] = { 0, 0, 0 };
+	data_to_write[0] = (uint32_t)(q.head - q.base);
+	data_to_write[1] = (uint32_t)(q.size);
+	data_to_write[2] = (uint32_t)(q.max_size);
 
 	res = fwrite( (const void *)data_to_write, sizeof(uint32_t), sizeof(data_to_write) / sizeof(uint32_t), f);
 	uint32_t i;
-	for (i = 0; i < data_to_write[3]; i++)
+	for (i = 0; i < data_to_write[1]; i++)
 	{
 		uint32_t val = qpop(&q);
 		fwrite( (const void *)(&val), sizeof(val), 1, f);
@@ -96,14 +95,14 @@ size_t get_queue_from_file( t_queue * q, FILE * f)
 		return -1;
 	else
 	{
-		uint32_t data_to_read[5] = { 0, 0, 0, 0 ,0 };
+		uint32_t data_to_read[3] = { 0, 0, 0 };
 		size_t ret = fread_s((void *)data_to_read, sizeof(data_to_read), sizeof(uint32_t), sizeof(data_to_read) / sizeof(uint32_t), f);
 
-		q->tail = q->head = (size_t *)(q->base) + data_to_read[1];
-		q->max_size = data_to_read[4];
+		q->tail = q->head = (size_t *)(q->base) + data_to_read[0];
+		q->max_size = data_to_read[2];
 
 		size_t i;
-		for (i = 0; i < (size_t)data_to_read[3]; i++)
+		for (i = 0; i < (size_t)data_to_read[1]; i++)
 		{
 			fread_s( (void *)(&val), sizeof(val), sizeof(uint32_t), 1, f);
 			qpush( q, val);
