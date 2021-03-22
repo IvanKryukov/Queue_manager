@@ -85,14 +85,14 @@ size_t get_queue_from_file( t_queue * q, FILE * f)
 	 */
 
 	uint32_t val;
-	size_t ret = fread_s( (void *)(&val), sizeof(val), sizeof(uint32_t), 1, f);
+	size_t ret = fread((void *)(&val), sizeof(uint32_t), 1, f);
 
 	if (val != CHECK_VAL)
 		return -1;
 	else
 	{
 		uint32_t data_to_read[3] = { 0, 0, 0 };
-		size_t ret = fread_s((void *)data_to_read, sizeof(data_to_read), sizeof(uint32_t), sizeof(data_to_read) / sizeof(uint32_t), f);
+		size_t ret = fread((void *)data_to_read, sizeof(uint32_t), sizeof(data_to_read) / sizeof(uint32_t), f);
 
 		q->tail = q->head = (size_t *)(q->base) + data_to_read[0];
 		q->max_size = data_to_read[2];
@@ -100,7 +100,7 @@ size_t get_queue_from_file( t_queue * q, FILE * f)
 		size_t i;
 		for (i = 0; i < (size_t)data_to_read[1]; i++)
 		{
-			fread_s( (void *)(&val), sizeof(val), sizeof(uint32_t), 1, f);
+			fread((void *)(&val), sizeof(uint32_t), 1, f);
 			qpush( q, val);
 		}
 	}
