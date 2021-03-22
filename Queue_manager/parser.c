@@ -4,8 +4,7 @@
 #include "parser.h"
 #include "queue_manager.h"
 
-#define CHECK_WVAL		(uint32_t)(0xAABB4455)
-#define CHECK_RVAL		(uint32_t)(0x5544BBAA)
+#define CHECK_VAL		(uint32_t)(0xAABB4455)
 
 int get_command( const char * cmd_string)
 {
@@ -48,16 +47,14 @@ int get_argument( const char * arg_string)
 size_t set_queue_to_file( t_queue q, FILE * f)
 {
 	/*
-	 *	Так как структура t_queue содержит в себе три ссылки на область в памяти,
+	 *	Так как структура t_queue содержит в себе ссылки на область в памяти,
 	 *	а при исполнении программы могут выделяться различные области, то запись
 	 *	данных о структуре t_queue переходит в относительные величины по правилу:
-	 *	- base = 0 всегда,
 	 *	- head = номер относительно base,
-	 *	- tail = номер относительно base,
 	 *	- size и max_size - без изменений
 	 */
 	
-	uint32_t ch = CHECK_WVAL;
+	uint32_t ch = CHECK_VAL;
 	size_t res = fwrite((const void *)(&ch), sizeof(uint32_t), 1, f);	
 
 	uint32_t data_to_write[3] = { 0, 0, 0 };
@@ -68,6 +65,7 @@ size_t set_queue_to_file( t_queue q, FILE * f)
 	res = fwrite( (const void *)data_to_write, sizeof(uint32_t), sizeof(data_to_write) / sizeof(uint32_t), f);
 	uint32_t i;
 	for (i = 0; i < data_to_write[1]; i++)
+	//while(!qempty(&q))
 	{
 		uint32_t val = qpop(&q);
 		fwrite( (const void *)(&val), sizeof(val), 1, f);
@@ -79,19 +77,17 @@ size_t set_queue_to_file( t_queue q, FILE * f)
 size_t get_queue_from_file( t_queue * q, FILE * f)
 {
 	/*
-	 *	Так как структура t_queue содержит в себе три ссылки на область в памяти,
+	 *	Так как структура t_queue содержит в себе ссылки на область в памяти,
 	 *	а при исполнении программы могут выделяться различные области, то чтение
 	 *	данных о структуре t_queue переходит в относительные величины по правилу:
-	 *	- base = p_base,
 	 *	- head = p_base + номер относительно base,
-	 *	- tail = p_base + номер относительно base,
 	 *	- size и max_size - без изменений
 	 */
 
 	uint32_t val;
 	size_t ret = fread_s( (void *)(&val), sizeof(val), sizeof(uint32_t), 1, f);
 
-	if (val != CHECK_WVAL)
+	if (val != CHECK_VAL)
 		return -1;
 	else
 	{

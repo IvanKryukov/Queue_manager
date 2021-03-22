@@ -2,20 +2,17 @@
 #include <stdlib.h>
 #include "queue_manager.h"
 
-#define TRACE_PTRS
+//#define TRACE_PTRS
 //#define PRINT_REAL_MAP
 
 void print_queue_info( const t_queue * q)
 {
-	printf(" - queue info - \n"
-
 #if defined TRACE_PTRS
-		   "base: 0x%p\n"
+	printf("base: 0x%p\n"
 		   "head: 0x%p\n"
 		   "tail: 0x%p\n"
 #else
-		   "head: %zu\n"
-		   "tail: %zu\n"
+	printf("head: %zu\n"
 #endif
 		   "    size: %zu\n"
 		   "max size: %zu\n",
@@ -23,63 +20,72 @@ void print_queue_info( const t_queue * q)
 #if defined TRACE_PTRS
 		   q->base, q->head, q->tail,
 #else
-		   *q->head, *q->tail,
+		   *q->head,
 #endif
 		   q->size, q->max_size
 		  );
 }
 
-void print_queue_items__all(const t_queue* q)
+void print_queue_items__all(const t_queue * q)
 {
-	printf(" - queue data - \n");
-
-	size_t* ptr = q->head;
+	if (q->size == 0)
+		printf("empty\n");
+	else
+	{
+		size_t* ptr = q->head;
 
 #if !(defined PRINT_REAL_MAP)
-	size_t i;
+		size_t i;
 
-	for (i = 0; i < q->size; i++)
-	{
-		printf("%02zu ", *ptr);
+		for (i = 0; i < q->size; i++)
+		{
+			printf("%02zu ", *ptr);
 
-		if (ptr >= q->base + (q->max_size - 1))
-			(ptr = q->base);
-		else
-			ptr++;
-	}
+			if (ptr >= q->base + (q->max_size - 1))
+				(ptr = q->base);
+			else
+				ptr++;
+		}
 #else
-	for (ptr = q->base; ptr < q->base + (q->max_size - 1); ptr++)
-		printf("%02zu ", *ptr);
+		for (ptr = q->base; ptr < q->base + (q->max_size - 1); ptr++)
+			printf("%02zu ", *ptr);
 #endif
 
-	printf("\n");
+		printf("\n");
+	}
 }
 
-void print_queue_items__chosen(const t_queue* q, const uint32_t bit_one_number)
+void print_queue_items__chosen( const t_queue * q, const uint32_t bit_one_number)
 {
-	size_t* ptr = q->base;
+	if (q->size == 0)
+		printf("empty\n");
+	else
+	{
+		size_t* ptr = q->base;
+		uint32_t mask = (1 << bit_one_number);
 
 #if !(defined PRINT_REAL_MAP)
-	size_t i;
+		size_t i;
 
-	for (i = 0; i < q->size; i++)
-	{
-		if ((*ptr & (size_t)bit_one_number) != 0)
-			printf("%02zu ", *ptr);
+		for (i = 0; i < q->size; i++)
+		{
+			if ((*ptr & (size_t)mask) != 0)
+				printf("%02zu ", *ptr);
 
-		if (ptr >= q->base + (q->max_size - 1))
-			(ptr = q->base);
-		else
-			ptr++;
-	}
+			if (ptr >= q->base + (q->max_size - 1))
+				(ptr = q->base);
+			else
+				ptr++;
+		}
 #else
-	for (ptr = q->base; ptr < q->base + (q->max_size - 1); ptr++)
-		if ((*ptr & (size_t)bit_one_number) != 0)
-			printf("%02zu ", *ptr);
-		else
-			printf("%02zu ", 0);
+		for (ptr = q->base; ptr < q->base + (q->max_size - 1); ptr++)
+			if ((*ptr & (size_t)mask) != 0)
+				printf("%02zu ", *ptr);
+			else
+				printf("%02zu ", 0);
 
 #endif
+	}
 }
 
 e_qres qinit( t_queue * q, const size_t * p_base, const size_t length_in_items)
@@ -194,7 +200,7 @@ e_qres qmerge(t_queue * qnew, t_queue * q1, t_queue * q2, const size_t * p_base,
 				}				
 
 				q1->head = q1->tail = (size_t *)q1->base;
-				q2->head = q2->tail = (size_t *)q1->base;
+				q2->head = q2->tail = (size_t *)q2->base;
 				q1->size = q2->size = 0;
 			}
 		}

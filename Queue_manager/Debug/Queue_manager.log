@@ -1,6 +1,6 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(467,5): warning MSB8028: промежуточный каталог (Debug\) содержит файлы, которые используются совместно с другим проектом (Queue_manager.vcxproj).  Это может привести к ошибкам очистки и перестроения.
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(519,5): warning MSB8028: промежуточный каталог (Debug\) содержит файлы, которые используются совместно с другим проектом (Queue_manager.vcxproj).  Это может привести к ошибкам очистки и перестроения.
   main.c
   parser.c
   queue_manager.c
   Создание кода...
-  Queue_manager.vcxproj -> C:\Users\Ivan\Documents\VS2019_Projects\Queue_manager\Debug\qman.exe
+  Queue_manager.vcxproj -> F:\STORAGE\Queue_manager\Debug\qman.exe
