@@ -1,0 +1,19 @@
+--std=C11
+
+CC=g++
+CFLAGS=-c -Wall
+
+all: main.o parser.o queue_manager.o
+	$(CC) main.o parser.o queue_manager.o -o qman
+
+main.o: main.c
+	$(CC) $(CFLAGS) main.c
+
+parser.o: parser.c
+	$(CC) $(CFLAGS) parser.c
+
+queue_manager.o: queue_manager.c
+	$(CC) $(CFLAGS) queue_manager.c
+
+clean:
+	rm -rf *.o qman
