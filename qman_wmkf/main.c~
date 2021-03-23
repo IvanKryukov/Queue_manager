@@ -163,20 +163,11 @@ int main( int argc, char ** argv)
 	t_queue qu[3];
 	uint8_t qu_count = 0;
 
-	e_qres qres = qinit(&qu[0], (size_t *)&mem_space[0][0], qu_size[0]);
-#if (defined TRACE_RES)
-	print_qret(qres);
-#endif
+	qinit(&qu[0], (size_t *)&mem_space[0][0], qu_size[0]);
 
-	qres = qinit(&qu[1], (size_t *)&mem_space[1][0], qu_size[1]);
-#if (defined TRACE_RES)
-	print_qret(qres);
-#endif
+	qinit(&qu[1], (size_t *)&mem_space[1][0], qu_size[1]);
 
-	qres = qinit(&qu[2], (size_t *)&mem_space[2][0], qu_size[2]);
-#if (defined TRACE_RES)
-	print_qret(qres);
-#endif
+	qinit(&qu[2], (size_t *)&mem_space[2][0], qu_size[2]);
 
 	/*******************************************************
 	 *** Read the queue info and data if the file exists ***
@@ -185,7 +176,7 @@ int main( int argc, char ** argv)
 	quf = fopen("./queues.bin", "rb+");
 	if (NULL != quf)
 	{
-		size_t getq_ret = get_queues(&qu[0], &qu[1], &qu[2], quf);
+		get_queues(&qu[0], &qu[1], &qu[2], quf);
 		fclose(quf);
 	}
 
@@ -193,14 +184,7 @@ int main( int argc, char ** argv)
 	 *** Execute the command with related arguments after checking everything ***
 	 ****************************************************************************/
 	if ((int)cmd_push == command)
-	{
-		const e_qres qres = qpush(&qu[argument[0] - 1], argument[1]);
-#if (defined TRACE_RES)
-		print_qret(qres);
-		print_queue_info(&qu[argument[0] - 1]);
-		print_queue_items__all(&qu[argument[0] - 1]);
-#endif
-	}
+		qpush(&qu[argument[0] - 1], argument[1]);
 
 	if ((int)cmd_pop == command)
 	{
@@ -211,26 +195,10 @@ int main( int argc, char ** argv)
 			uint32_t qres = qpop(&qu[argument[0] - 1]);
 			printf("%u\n", qres);
 		}
-#if (defined TRACE_RES)
-		print_queue_info(&qu[argument[0] - 1]);
-		print_queue_items__all(&qu[argument[0] - 1]);
-#endif
 	}
 
 	if ((int)cmd_merge == command)
-	{
-		const e_qres qres = qmerge( &qu[2], &qu[0], &qu[1], (size_t *)&mem_space[2][0], QUEUE3_LENGTH);
-#if (defined TRACE_RES)
-		print_qret(qres);
-		if (qres == q_ok)
-		{
-			qu_count = 2;
-
-			print_queue_info(&qu[2]);
-			print_queue_items__all(&qu[2]);
-		}
-#endif
-	}
+		qmerge( &qu[2], &qu[0], &qu[1], (size_t *)&mem_space[2][0], QUEUE3_LENGTH);
 
 	if ((int)cmd_print_qinfo == command)
 	{
@@ -239,14 +207,10 @@ int main( int argc, char ** argv)
 	}
 
 	if ((int)cmd_print_qdata_all == command)
-	{
 		print_queue_items__all(&qu[argument[0] - 1]);
-	}
 
 	if ((int)cmd_print_qdata_bits == command)
-	{
 		print_queue_items__chosen(&qu[argument[0] - 1], argument[1]);
-	}
 
 	/**********************************************
 	 *** Write the info and data of every queue ***
